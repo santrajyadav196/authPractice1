@@ -54,3 +54,24 @@ exports.loginUser = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getUserProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return next(new CustomError("User not found", 404));
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Fetched user profile successfully",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
